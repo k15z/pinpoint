@@ -13,10 +13,15 @@ var wheel = {
 		"3.14": 3
 	},
 
+	"score": 0,
+	"highscore": 0,
 	"pinned": {},
 	"failed": {}
 
 }
+wheel.highscore = readCookie('highscore');
+if (!wheel.highscore)
+	wheel.highscore = 0;
 if (!wheel.x)
 	wheel.x = parseInt(c.height/2);
 if (!wheel.y)
@@ -26,7 +31,7 @@ if (!wheel.r)
 if (!wheel.spokes)
 	wheel.spokes = parseInt(Math.random()*3) + 3;
 if (!wheel.pins)
-	wheel.pins = parseInt(Math.random()*9) + 13;
+	wheel.pins = parseInt(Math.random()*15) + 5;
 if (!wheel.speeds) {
 	wheel.speeds = {};
 	if (Math.random() > 0.75)
@@ -41,14 +46,30 @@ if (!wheel.speeds) {
 
 function reset() {
 	wheel.spokes = parseInt(Math.random()*3) + 3;
-	wheel.pins = parseInt(Math.random()*7) + 15;
+	wheel.pins = parseInt(Math.random()*10) + 5;
 	wheel.pinned = {};
 	wheel.failed = {};
+	wheel.speeds = {};
+	if (Math.random() > 0.75*(10/(wheel.score+1)))
+		wheel.speeds[Math.PI*0/2] = parseInt(3*Math.random());
+	if (Math.random() > 0.75*(10/(wheel.score+1)))
+		wheel.speeds[Math.PI*1/2] = parseInt(3*Math.random());
+	if (Math.random() > 0.75*(10/(wheel.score+1)))
+		wheel.speeds[Math.PI*2/2] = parseInt(3*Math.random());
+	if (Math.random() > 0.75*(10/(wheel.score+1)))
+		wheel.speeds[Math.PI*3/2] = parseInt(3*Math.random());
 }
 
 function draw() {
 	ctx.fillStyle="#e8e7ea";
 	ctx.fillRect(0,0,c.width,c.height)
+
+	ctx.font = '18pt Calibri';
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#19478a';
+	ctx.fillText("high score: " + wheel.highscore, c.width-25, 50);
+	ctx.fillText("score: " + wheel.score, c.width-25, 50+25);
+
 	ctx.beginPath();
 	ctx.arc(wheel.x, wheel.y, 100, 100, Math.PI*2, true); 
 	ctx.closePath();
@@ -158,20 +179,30 @@ function fire() {
 	if (!lost) {
 		wheel.pinned[wheel.pins] = t;
 		wheel.pins--;
+		wheel.score++;
+
+		if (wheel.score > wheel.highscore)
+			wheel.highscore = wheel.score;
+		document.cookie = createCookie('highscore',wheel.highscore,7);
+
 	} else {
 		wheel.failed[wheel.pins] = t;
 		wheel.pins--;
 		draw();
 		alert("You lost!");
+
+		if (wheel.score > wheel.highscore)
+			wheel.highscore = wheel.score;
+		document.cookie = createCookie('highscore',wheel.highscore,7);
+		wheel.score = 0;
+
 		reset();
 		return false;
 	}
 
 	if (wheel.pins < 0) {
 		draw();
-		alert("You won!");
 		reset();
-		return true;
 	}
 }
 
@@ -197,3 +228,30 @@ function play() {
 	gameloop = setTimeout(play,speed);
 }
 play();
+
+
+// http://stackoverflow.com/questions/14573223/set-cookie-and-get-cookie-with-javascript
+function createCookie(name,value,days) {
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime()+(days*24*60*60*1000));
+        var expires = "; expires="+date.toGMTString();
+    }
+    else var expires = "";
+    document.cookie = name+"="+value+expires+"; path=/";
+}
+
+function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
+function eraseCookie(name) {
+    createCookie(name,"",-1);
+}
