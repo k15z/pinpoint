@@ -233,10 +233,12 @@ function fire() {
 document.onkeydown = function(e) {
 	if (e.keyCode == 32)
 		fire();
+	return false;
 };
 
 c.onclick = function(e) {
 	fire();
+	return false;
 };
 
 function play() {

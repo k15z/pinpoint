@@ -15,4 +15,6 @@ body {
 	width: 100%;
 	display: block;
 	background-color: #e8e7ea;
+	-ms-touch-action: manipulation; /* IE10  */
+    touch-action: manipulation;     /* IE11+ */
 }
