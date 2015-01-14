@@ -1,0 +1,18 @@
+* {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: 'Open Sans', sans-serif;
+	max-width: 940px;
+	margin: auto;
+	padding: 5px;
+}
+
+#canvas {
+	width: 100%;
+	display: block;
+	background-color: #e8e7ea;
+}
