@@ -47,7 +47,7 @@ if (!wheel.speeds) {
 
 function reset() {
 	wheel.spokes = parseInt(Math.random()*3) + 3;
-	wheel.pins = parseInt(Math.random()*15) + (wheel.level)%7;
+	wheel.pins = parseInt(Math.random()*10) + (wheel.level)%15;
 	wheel.pinned = {};
 	wheel.failed = {};
 	wheel.speeds = {};
