@@ -13,6 +13,7 @@ var wheel = {
 		"3.14": 3
 	},
 
+	"level": 0,
 	"score": 0,
 	"highscore": 0,
 	"pinned": {},
@@ -46,7 +47,7 @@ if (!wheel.speeds) {
 
 function reset() {
 	wheel.spokes = parseInt(Math.random()*3) + 3;
-	wheel.pins = parseInt(Math.random()*10) + 5;
+	wheel.pins = parseInt(Math.random()*15) + (wheel.level)%7;
 	wheel.pinned = {};
 	wheel.failed = {};
 	wheel.speeds = {};
@@ -67,8 +68,8 @@ function draw() {
 	ctx.font = '18pt Calibri';
     ctx.textAlign = 'right';
     ctx.fillStyle = '#19478a';
-	ctx.fillText("high score: " + wheel.highscore, c.width-25, 50);
-	ctx.fillText("score: " + wheel.score, c.width-25, 50+25);
+	ctx.fillText("high score: " + wheel.highscore, c.width-25, 40);
+	ctx.fillText("score: " + wheel.score, c.width-25, 40+30*1);
 
 	ctx.beginPath();
 	ctx.arc(wheel.x, wheel.y, 100, 100, Math.PI*2, true); 
@@ -161,8 +162,20 @@ function draw() {
         ctx.textAlign = 'center';
         ctx.fillStyle = 'red';
 		ctx.fillText("Fail!", c.width/2, 48*2);
+		return;
 	}
 
+	if (wheel.pins < 0) {
+		ctx.font = '48pt Calibri';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = 'green';
+		wheel.level++;
+		ctx.fillText("Level " + wheel.level + "!", c.width/2, 48*2);
+	}
+
+	ctx.font = '48pt Calibri';
+    ctx.fillStyle = 'white';
+	ctx.fillText(wheel.level, wheel.x, wheel.y+20);
 }
 
 function fire() {
@@ -199,16 +212,21 @@ function fire() {
 			wheel.highscore = wheel.score;
 		document.cookie = createCookie('highscore',wheel.highscore,7);
 		wheel.score = 0;
+		wheel.level = 0;
 
 		reset();
 		clearTimeout(gameloop);
-		gameloop = setTimeout(play,1000);
+		gameloop = setTimeout(play,500);
 		return false;
 	}
 
 	if (wheel.pins < 0) {
 		draw();
+
 		reset();
+		clearTimeout(gameloop);
+		gameloop = setTimeout(play,500);
+		return true;
 	}
 }
 
