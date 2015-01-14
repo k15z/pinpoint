@@ -8,6 +8,10 @@ var wheel = {
 	"r": NaN,
 	"spokes": NaN,
 	"pins": NaN,
+	"speeds": {
+		"0.00": 1,
+		"3.14": 3
+	},
 
 	"pinned": {},
 	"failed": {}
@@ -20,14 +24,31 @@ if (!wheel.y)
 if (!wheel.r)
 	wheel.r = parseInt((c.height/2)*4/5);
 if (!wheel.spokes)
-	wheel.spokes = parseInt(Math.random()*4) + 2;
+	wheel.spokes = parseInt(Math.random()*3) + 3;
 if (!wheel.pins)
-	wheel.pins = parseInt(Math.random()*7) + 17;
+	wheel.pins = parseInt(Math.random()*7) + 15;
+if (!wheel.speeds) {
+	wheel.speeds = {};
+	if (Math.random() > 0.5)
+		wheel.speeds[Math.PI*0/2] = parseInt(3*Math.random());
+	if (Math.random() > 0.5)
+		wheel.speeds[Math.PI*1/2] = parseInt(3*Math.random());
+	if (Math.random() > 0.5)
+		wheel.speeds[Math.PI*2/2] = parseInt(3*Math.random());
+	if (Math.random() > 0.5)
+		wheel.speeds[Math.PI*3/2] = parseInt(3*Math.random());
+}
+
+function reset() {
+	wheel.spokes = parseInt(Math.random()*3) + 3;
+	wheel.pins = parseInt(Math.random()*7) + 15;
+	wheel.pinned = {};
+	wheel.failed = {};
+}
 
 function draw() {
 	ctx.fillStyle="#e8e7ea";
 	ctx.fillRect(0,0,c.width,c.height)
-
 	ctx.beginPath();
 	ctx.arc(wheel.x, wheel.y, 100, 100, Math.PI*2, true); 
 	ctx.closePath();
@@ -140,15 +161,16 @@ function fire() {
 	} else {
 		wheel.failed[wheel.pins] = t;
 		wheel.pins--;
-		clearInterval(gameloop);
 		draw();
+		alert("You lost!");
+		reset();
 		return false;
 	}
 
 	if (wheel.pins < 0) {
-		clearInterval(gameloop);
 		draw();
-		alert("You win!");
+		alert("You won!");
+		reset();
 		return true;
 	}
 }
@@ -167,5 +189,11 @@ function play() {
 	wheel.t += 0.025;
 	if (wheel.t > Math.PI*2)
 		wheel.t -= Math.PI*2;
+
+	var speed = 33;
+	for (time in wheel.speeds)
+		if (parseFloat(time) < wheel.t) 
+			speed *= 1/wheel.speeds[time];
+	gameloop = setTimeout(play,speed);
 }
-gameloop = setInterval(play,33)
+play();
