@@ -231,7 +231,7 @@ function fire() {
 }
 
 document.onkeydown = function(e) {
-	if (e.keyCode == 32)
+	if (e.keyCode == 32 || e.keyCode == 13)
 		fire();
 	return false;
 };
