@@ -26,16 +26,16 @@ if (!wheel.r)
 if (!wheel.spokes)
 	wheel.spokes = parseInt(Math.random()*3) + 3;
 if (!wheel.pins)
-	wheel.pins = parseInt(Math.random()*7) + 15;
+	wheel.pins = parseInt(Math.random()*9) + 13;
 if (!wheel.speeds) {
 	wheel.speeds = {};
-	if (Math.random() > 0.5)
+	if (Math.random() > 0.75)
 		wheel.speeds[Math.PI*0/2] = parseInt(3*Math.random());
-	if (Math.random() > 0.5)
+	if (Math.random() > 0.75)
 		wheel.speeds[Math.PI*1/2] = parseInt(3*Math.random());
-	if (Math.random() > 0.5)
+	if (Math.random() > 0.75)
 		wheel.speeds[Math.PI*2/2] = parseInt(3*Math.random());
-	if (Math.random() > 0.5)
+	if (Math.random() > 0.75)
 		wheel.speeds[Math.PI*3/2] = parseInt(3*Math.random());
 }
 
