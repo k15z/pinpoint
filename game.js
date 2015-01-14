@@ -156,6 +156,11 @@ function draw() {
         ctx.textAlign = 'center';
         ctx.fillStyle = 'white';
 		ctx.fillText(pin, x, y+7);
+
+		ctx.font = '48pt Calibri';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = 'red';
+		ctx.fillText("Fail!", c.width/2, 48*2);
 	}
 
 }
@@ -189,7 +194,6 @@ function fire() {
 		wheel.failed[wheel.pins] = t;
 		wheel.pins--;
 		draw();
-		alert("You lost!");
 
 		if (wheel.score > wheel.highscore)
 			wheel.highscore = wheel.score;
@@ -197,6 +201,8 @@ function fire() {
 		wheel.score = 0;
 
 		reset();
+		clearTimeout(gameloop);
+		gameloop = setTimeout(play,1000);
 		return false;
 	}
 
@@ -227,8 +233,7 @@ function play() {
 			speed *= 1/wheel.speeds[time];
 	gameloop = setTimeout(play,speed);
 }
-play();
-
+gameloop = setTimeout(play,33);
 
 // http://stackoverflow.com/questions/14573223/set-cookie-and-get-cookie-with-javascript
 function createCookie(name,value,days) {
